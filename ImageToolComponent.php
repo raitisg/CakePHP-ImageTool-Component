@@ -10,9 +10,6 @@ class ImageToolComponent extends Component {
 	/**
 	 * Place watermark on image
 	 *
-	 * Todo:
-	 * - watermark opacity
-	 *
 	 * Options:
 	 * - 'input' Input file (path or gd resource)
 	 * - 'output' Output path. If not specified, gd resource is returned
