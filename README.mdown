@@ -70,7 +70,7 @@ image in bottom-right corner and sharpen end result (with default settings)
 		'keepRatio' => true,
 		'paddings' => false,
 		'afterCallbacks' => array(
-			array('watermark', array('watermark' => $watermark_file, 'position' => 3)),
+			array('watermark', array('watermark' => $watermark_file, 'position' => 'bottom-right')),
 			array('unsharpMask'),
 		)
 	));

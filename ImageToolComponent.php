@@ -23,7 +23,7 @@ class ImageToolComponent extends Component {
 	 * - 'chmod' What permissions should be applied to destination image
 	 * - 'scale' If true, watermark will be scaled fullsize ('position' and 'repeat' won't be taken into account)
 	 * - 'repeat' Should watermark be repeated? This is ignored if 'scale' is set to true or 'position' is custom (array)
-	 * - 'position' Watermark position. Possible values: 1 (top-left), 2 (top-right), 3 (bottom-right), 4 (bottom-left), 5 (center) or custom: array(x, y)
+	 * - 'position' Watermark position. Possible values: 'top-left', 'top-right', 'bottom-right', 'bottom-left', 'center' or array(x, y)
 	 * - 'opacity' Watermark image's opacity (0-100). Default = 100
 	 * - 'afterCallbacks' Functions to be executed after this one
 	 *
@@ -38,7 +38,7 @@ class ImageToolComponent extends Component {
 			'watermark' => null,
 			'output' => null,
 			'input' => null,
-			'position' => 5,
+			'position' => 'center',
 			'compression' => 9,
 			'quality' => 100,
 			'chmod' => null,
@@ -78,7 +78,7 @@ class ImageToolComponent extends Component {
 			}
 
 			switch ($options['position']) {
-				case 1: // top-left
+				case 'top-left':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
 							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
@@ -86,7 +86,7 @@ class ImageToolComponent extends Component {
 					}
 				break;
 
-				case 2: // top-right
+				case 'top-right':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
 							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
@@ -94,7 +94,7 @@ class ImageToolComponent extends Component {
 					}
 				break;
 
-				case 3: // bottom-right
+				case 'bottom-right':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
 							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
@@ -102,7 +102,7 @@ class ImageToolComponent extends Component {
 					}
 				break;
 
-				case 4: // bottom-left
+				case 'bottom-left':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
 							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
@@ -110,7 +110,8 @@ class ImageToolComponent extends Component {
 					}
 				break;
 
-				case 5: // center
+				case 'center':
+				default:
 					$pos_x = -(($img_im_w%$img_wm_w)/2);
 					$pos_y = -(($img_im_h%$img_wm_h)/2);
 
@@ -128,27 +129,28 @@ class ImageToolComponent extends Component {
 			} else {
 				// predefined location
 				switch ($options['position']) {
-					case 1: // top-left
+					case 'top-left':
 						$pos_x = 0;
 						$pos_y = 0;
 					break;
 
-					case 2: // top-right
+					case 'top-right':
 						$pos_x = $img_im_w - $img_wm_w;
 						$pos_y = 0;
 					break;
 
-					case 3: // bottom-right
+					case 'bottom-right':
 						$pos_x = $img_im_w - $img_wm_w;
 						$pos_y = $img_im_h - $img_wm_h;
 					break;
 
-					case 4: // bottom-left
+					case 'bottom-left':
 						$pos_x = 0;
 						$pos_y = $img_im_h - $img_wm_h;
 					break;
 
-					case 5: // center
+					case 'center':
+					default:
 						$pos_x = round(($img_im_w - $img_wm_w) / 2);
 						$pos_y = round(($img_im_h - $img_wm_h) / 2);
 					break;
