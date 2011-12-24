@@ -12,7 +12,6 @@ class ImageToolComponent extends Component {
 	 *
 	 * Todo:
 	 * - watermark opacity
-	 * - option to keepRatio when scaling wm
 	 *
 	 * Options:
 	 * - 'input' Input file (path or gd resource)
@@ -22,6 +21,7 @@ class ImageToolComponent extends Component {
 	 * - 'compression' Output image compression (PNG only). Value from 0 to 9
 	 * - 'chmod' What permissions should be applied to destination image
 	 * - 'scale' If true, watermark will be scaled fullsize ('position' and 'repeat' won't be taken into account)
+	 * - 'strech' If true and scale also set to true, strech watermark to cover whole image
 	 * - 'repeat' Should watermark be repeated? This is ignored if 'scale' is set to true or 'position' is custom (array)
 	 * - 'position' Watermark position. Possible values: 'top-left', 'top-right', 'bottom-right', 'bottom-left', 'center' or array(x, y)
 	 * - 'opacity' Watermark image's opacity (0-100). Default = 100
@@ -34,6 +34,7 @@ class ImageToolComponent extends Component {
 		$options = array_merge(array(
 			'afterCallbacks' => null,
 			'scale' => false,
+			'strech' => false,
 			'repeat' => false,
 			'watermark' => null,
 			'output' => null,
@@ -71,7 +72,26 @@ class ImageToolComponent extends Component {
 		$img_wm_h = imagesy($src_wm);
 
 		if ($options['scale']) {
-			$r = imagecopyresampled($img, $src_wm, 0, 0, 0, 0, $img_im_w, $img_im_h, $img_wm_w, $img_wm_h);
+			if ($options['strech']) {
+				$r = imagecopyresampled($img, $src_wm, 0, 0, 0, 0, $img_im_w, $img_im_h, $img_wm_w, $img_wm_h);
+			} else {
+				$x = 0;
+				$y = 0;
+				$w = $img_im_w;
+				$h = $img_im_h;
+
+				if (($img_im_w / $img_im_h) > ($img_wm_w / $img_wm_h)) {
+					$ratio = $img_im_h / $img_wm_h;
+					$w = $ratio * $img_wm_w;
+					$x = round(($img_im_w - $w) / 2);
+				} else {
+					$ratio = $img_im_w / $img_wm_w;
+					$h = $ratio * $img_wm_h;
+					$y = round(($img_im_h - $h) / 2);
+				}
+
+				$r = imagecopyresampled($img, $src_wm, $x, $y, 0, 0, $w, $h, $img_wm_w, $img_wm_h);
+			}
 		} else if ($options['repeat']) {
 			if (is_array($options['position'])) {
 				$options['position'] = 5;
