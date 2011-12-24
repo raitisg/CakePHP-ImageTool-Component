@@ -11,16 +11,19 @@ Installation
 --------------------------------
 
 For use with cakephp 2.0:
-* Copy ImageTool.php to your app's Controller/Component/ directory
+
+1) Copy ImageTool.php to your app's Controller/Component/ directory
 
 For use with cakephp 1.3:
-* Rename ImageTool.php to image_tool.php
-* Change "class ImageToolComponent extends Component" to "class ImageToolComponent extends Object"
-* Copy image_tool.php to your app's controllers/components/ directory
+
+1) Rename ImageTool.php to image_tool.php
+2) Change "class ImageToolComponent extends Component" to "class ImageToolComponent extends Object"
+3) Copy image_tool.php to your app's controllers/components/ directory
 
 For use as standalone library:
-* Change "class ImageToolComponent extends Component" to "class ImageTool"
-* Include in your project
+
+1) Change "class ImageToolComponent extends Component" to "class ImageTool"
+2) Include in your project
 
 Error handling
 --------------------------------
@@ -44,7 +47,7 @@ Available functions
 * unsharpMask - sharpen image
 * watermark - add watermark
 
-Exmaples
+Examples
 --------------------------------
 
 Make thumbnail 100x100px in size
