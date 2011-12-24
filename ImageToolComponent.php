@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Image tool 1.1.1
+ * Image tool 1.1.2
  *
  * Different tools/functions to perform various tasks w/ images
  */
