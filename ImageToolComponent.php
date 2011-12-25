@@ -200,11 +200,11 @@ class ImageToolComponent extends Component {
 	 * - 'enlarge' if set to false and width or height of the destination image is bigger than source image's width or height, then leave source image's dimensions untouched
 	 * - 'chmod' What permissions should be applied to destination image
 	 * - 'keepRatio' If true and both output width and height is specified and crop is set to false, image is resized with respect to it's original ratio. If false (default), image is simple scaled.
-	 * - 'paddings' If true and both output width and height is specified and keepRatio is set to true, white padding borders are applied
+	 * - 'paddings' If not empty and both output width and height is specified and keepRatio is set to true, padding borders are applied. You can specify color here. If true, then white color will be applied
 	 * - 'afterCallbacks' Functions to be executed after resize. Example: array(array('unsharpMask', 70, 3.9, 0)); First passed argument is f-ion name. Executed function's first argument must be gd image instance
 	 * - 'crop' If true (default) crop excess portions of image to fit in specified size
-	 * - 'height' Output image's height. If left empty, this is auto calculated  (if possible)
-	 * - 'width' Output image's width. If left empty, this is auto calculated  (if possible)
+	 * - 'height' Output image's height. If left empty, this is auto calculated (if possible)
+	 * - 'width' Output image's width. If left empty, this is auto calculated (if possible)
 	 *
 	 * @param array $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
@@ -349,8 +349,17 @@ class ImageToolComponent extends Component {
 					return false;
 				}
 
-				$white = imagecolorallocate($bg_im, 255, 255, 255);
-				imagefilledrectangle($bg_im, 0, 0, $original_width, $original_height, $white);
+				if ($options['paddings'] === true) {
+					$rgb = array(255, 255, 255);
+				} else {
+					$rgb = $this->readColor($options['paddings']);
+					if (!$rgb) {
+						$rgb = array(255, 255, 255);
+					}
+				}
+
+				$color = imagecolorallocate($bg_im, $rgb[0], $rgb[1], $rgb[2]);
+				imagefilledrectangle($bg_im, 0, 0, $original_width, $original_height, $color);
 
 				$x = round(($original_width - $options['width']) / 2);
 				$y = round(($original_height - $options['height']) / 2);
