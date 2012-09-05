@@ -231,7 +231,7 @@ class ImageToolComponent extends Component {
 			return false;
 		}
 
-		$input_extension = $this->getExtension($options['input']);
+		$input_extension = $this->getImageType($options['input']);
 		$output_extension = $this->getExtension($options['output']);
 
 		$src_im = $this->openImage($options['input']);
@@ -324,7 +324,7 @@ class ImageToolComponent extends Component {
 		if (in_array($input_extension, array('png', 'gif'))) {
 			if (in_array($output_extension, array('png', 'gif'))) {
 				imagealphablending($dst_im, false);
-				imagesavealpha($dst_im,true);
+				imagesavealpha($dst_im, true);
 				$transparent = imagecolorallocatealpha($dst_im, 255, 255, 255, 127);
 				imagefilledrectangle($dst_im, 0, 0,$options['width'], $options['height'], $transparent);
 			} else {
