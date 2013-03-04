@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Image tool 1.1.2
+ * Image tool 1.2.0
  *
  * Different tools/functions to perform various tasks w/ images
  */
-class ImageToolComponent extends Component {
+class ImageTool {
 
 	/**
 	 * Place watermark on image
@@ -20,15 +20,15 @@ class ImageToolComponent extends Component {
 	 * - 'scale' If true, watermark will be scaled fullsize ('position' and 'repeat' won't be taken into account)
 	 * - 'strech' If true and scale also set to true, strech watermark to cover whole image
 	 * - 'repeat' Should watermark be repeated? This is ignored if 'scale' is set to true or 'position' is custom (array)
-	 * - 'position' Watermark position. Possible values: 'top-left', 'top-right', 'bottom-right', 'bottom-left', 'center' or array(x, y)
+	 * - 'position' Watermark position. Possible values: 'top-left', 'top-right', 'bottom-right', 'bottom-left', 'center' or [x, y]
 	 * - 'opacity' Watermark image's opacity (0-100). Default = 100
 	 * - 'afterCallbacks' Functions to be executed after this one
 	 *
 	 * @param array $options An array of options.
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function watermark($options = array()) {
-		$options = array_merge(array(
+	public static function watermark($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'scale' => false,
 			'strech' => false,
@@ -41,20 +41,20 @@ class ImageToolComponent extends Component {
 			'quality' => 100,
 			'chmod' => null,
 			'opacity' => 100
-		), $options);
+		], $options);
 
 		// if output path (directories) doesn't exist, try to make whole path
-		if (!$this->createPath($options['output'])) {
+		if (!ImageTool::createPath($options['output'])) {
 			return false;
 		}
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 		if (empty($img)) {
 			return false;
 		}
 
-		$src_wm = $this->openImage($options['watermark']);
+		$src_wm = ImageTool::openImage($options['watermark']);
 		unset($options['watermark']);
 		if (empty($src_wm)) {
 			return false;
@@ -98,7 +98,7 @@ class ImageToolComponent extends Component {
 				case 'top-left':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -106,7 +106,7 @@ class ImageToolComponent extends Component {
 				case 'top-right':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
-							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -114,7 +114,7 @@ class ImageToolComponent extends Component {
 				case 'bottom-right':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
-							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -122,7 +122,7 @@ class ImageToolComponent extends Component {
 				case 'bottom-left':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -134,7 +134,7 @@ class ImageToolComponent extends Component {
 
 					for ($y=$pos_y; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=$pos_x; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = $this->imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -174,18 +174,18 @@ class ImageToolComponent extends Component {
 				}
 			}
 
-			$r = $this->imagecopymerge_alpha($img, $src_wm, $pos_x, $pos_y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+			$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $pos_x, $pos_y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 		}
 
 		if (!$r) {
 			return false;
 		}
 
-		if (!$this->afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($img, $options);
+		return ImageTool::saveImage($img, $options);
 	}
 
 	/**
@@ -201,7 +201,7 @@ class ImageToolComponent extends Component {
 	 * - 'chmod' What permissions should be applied to destination image
 	 * - 'keepRatio' If true and both output width and height is specified and crop is set to false, image is resized with respect to it's original ratio. If false (default), image is simple scaled.
 	 * - 'paddings' If not empty and both output width and height is specified and keepRatio is set to true, padding borders are applied. You can specify color here. If true, then white color will be applied
-	 * - 'afterCallbacks' Functions to be executed after resize. Example: array(array('unsharpMask', 70, 3.9, 0)); First passed argument is f-ion name. Executed function's first argument must be gd image instance
+	 * - 'afterCallbacks' Functions to be executed after resize. Example: [['unsharpMask', 70, 3.9, 0]]; First passed argument is f-ion name. Executed function's first argument must be gd image instance
 	 * - 'crop' If true (default) crop excess portions of image to fit in specified size
 	 * - 'height' Output image's height. If left empty, this is auto calculated (if possible)
 	 * - 'width' Output image's width. If left empty, this is auto calculated (if possible)
@@ -209,8 +209,8 @@ class ImageToolComponent extends Component {
 	 * @param array $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function resize($options = array()) {
-		$options = array_merge(array(
+	public static function resize($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'keepRatio' => false,
@@ -224,17 +224,17 @@ class ImageToolComponent extends Component {
 			'width' => null,
 			'input' => null,
 			'crop' => true
-		), $options);
+		], $options);
 
 		// if output path (directories) doesn't exist, try to make whole path
-		if (!$this->createPath($options['output'])) {
+		if (!ImageTool::createPath($options['output'])) {
 			return false;
 		}
 
-		$input_extension = $this->getImageType($options['input']);
-		$output_extension = $this->getExtension($options['output']);
+		$input_extension = ImageTool::getImageType($options['input']);
+		$output_extension = ImageTool::getExtension($options['output']);
 
-		$src_im = $this->openImage($options['input']);
+		$src_im = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -321,8 +321,8 @@ class ImageToolComponent extends Component {
 		}
 
 		// transparency or white bg instead of black
-		if (in_array($input_extension, array('png', 'gif'))) {
-			if (in_array($output_extension, array('png', 'gif'))) {
+		if (in_array($input_extension, ['png', 'gif'])) {
+			if (in_array($output_extension, ['png', 'gif'])) {
 				imagealphablending($dst_im, false);
 				imagesavealpha($dst_im, true);
 				$transparent = imagecolorallocatealpha($dst_im, 255, 255, 255, 127);
@@ -350,11 +350,11 @@ class ImageToolComponent extends Component {
 				}
 
 				if ($options['paddings'] === true) {
-					$rgb = array(255, 255, 255);
+					$rgb = [255, 255, 255];
 				} else {
-					$rgb = $this->readColor($options['paddings']);
+					$rgb = ImageTool::readColor($options['paddings']);
 					if (!$rgb) {
-						$rgb = array(255, 255, 255);
+						$rgb = [255, 255, 255];
 					}
 				}
 
@@ -370,11 +370,11 @@ class ImageToolComponent extends Component {
 			}
 		}
 
-		if (!$this->afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($dst_im, $options);
+		return ImageTool::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -401,8 +401,8 @@ class ImageToolComponent extends Component {
 	 * @param array $options An array of options.
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function unsharpMask($options = array()) {
-		$options = array_merge(array(
+	public static function unsharpMask($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
@@ -412,9 +412,9 @@ class ImageToolComponent extends Component {
 			'output' => null,
 			'input' => null,
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -443,7 +443,7 @@ class ImageToolComponent extends Component {
 		$options['radius'] = abs(round($options['radius']));
 
 		if ($options['radius'] == 0) {
-			return $this->saveImage($img, $options);
+			return ImageTool::saveImage($img, $options);
 		}
 
 		$w = imagesx($img);
@@ -454,11 +454,11 @@ class ImageToolComponent extends Component {
 
 		// PHP >= 5.1
 		if (function_exists('imageconvolution')) {
-			$matrix = array(
-				array(1, 2, 1),
-				array(2, 4, 2),
-				array(1, 2, 1)
-			);
+			$matrix = [
+				[1, 2, 1],
+				[2, 4, 2],
+				[1, 2, 1]
+			];
 			imagecopy ($imgBlur, $img, 0, 0, 0, 0, $w, $h);
 			imageconvolution($imgBlur, $matrix, 16, 0);
 		} else {
@@ -533,11 +533,11 @@ class ImageToolComponent extends Component {
 			}
 		}
 
-		if (!$this->afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($img, $options);
+		return ImageTool::saveImage($img, $options);
 	}
 
 	/**
@@ -546,7 +546,7 @@ class ImageToolComponent extends Component {
 	 * @param string $filename Filename
 	 * @return string
 	 */
-	function getExtension($filename) {
+	public static function getExtension($filename) {
 		if (!is_string($filename)) {
 			return '';
 		}
@@ -566,13 +566,22 @@ class ImageToolComponent extends Component {
 	 * @param string $input Input (path) image
 	 * @return mixed
 	 */
-	function openImage($input) {
+	public static function openImage($input) {
 		if (is_resource($input)) {
 			if (get_resource_type($input) == 'gd') {
 				return $input;
 			}
 		} else {
-			switch ($this->getImageType($input)) {
+			if (is_string($input) && preg_match('/^https?:\/\//', $input)) {
+				$image = file_get_contents($input);
+				if (!$image) {
+					return false;
+				}
+
+				return imagecreatefromstring($image);
+			}
+
+			switch (ImageTool::getImageType($input)) {
 				case 'jpg':
 					return imagecreatefromjpeg($input);
 				break;
@@ -598,9 +607,9 @@ class ImageToolComponent extends Component {
 	 * @param boolean $extension If true, check by extension
 	 * @return string
 	 */
-	function getImageType($input, $extension = false) {
+	public static function getImageType($input, $extension = false) {
 		if ($extension) {
-			switch ($this->getExtension($input)) {
+			switch (ImageTool::getExtension($input)) {
 				case 'jpg':
 					return 'jpg';
 				break;
@@ -652,20 +661,20 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of additional options
 	 * @return boolean
 	 */
-	function saveImage(&$im, $options = array()) {
-		foreach (array('compression', 'quality', 'chmod') as $v) {
+	public static function saveImage(&$im, $options = []) {
+		foreach (['compression', 'quality', 'chmod'] as $v) {
 			if (is_null($options[$v])) {
 				unset($options[$v]);
 			}
 		}
 
-		$options = array_merge(array(
+		$options = array_merge([
 			'compression' => 9,
 			'quality' => 100,
 			'output' => null
-		), $options);
+		], $options);
 
-		switch ($this->getImageType($options['output'], true)) {
+		switch (ImageTool::getImageType($options['output'], true)) {
 			case 'jpg':
 				if (ImageJPEG($im, $options['output'], $options['quality'])) {
 					if (!empty($options['chmod'])) {
@@ -711,7 +720,7 @@ class ImageToolComponent extends Component {
 	 * @param mixed $chmod Each folder's permissions
 	 * @return boolean
 	 */
-	function createPath($output_path, $chmod = 0777) {
+	public static function createPath($output_path, $chmod = 0777) {
 		if (empty($output_path)) {
 			return true;
 		}
@@ -745,23 +754,23 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function autorotate($options = array()) {
-		$options = array_merge(array(
+	public static function autorotate($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
 			'input' => null,
 			'output' => null,
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$type = $this->getImageType($options['input']);
+		$type = ImageTool::getImageType($options['input']);
 
 		if ($type == 'jpg' && function_exists('exif_read_data')) {
 			$exif = exif_read_data($options['input']);
 		}
 
-		$src_im = $this->openImage($options['input']);
+		$src_im = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -773,57 +782,57 @@ class ImageToolComponent extends Component {
 		} else if (!empty($exif['IFD0']['Orientation'])) {
 			$orientation = $exif['IFD0']['Orientation'];
 		} else {
-			return $this->saveImage($src_im, $options);
+			return ImageTool::saveImage($src_im, $options);
 		}
 
     switch ($orientation) {
 			case 1:
-				return $this->saveImage($src_im, $options);
+				return ImageTool::saveImage($src_im, $options);
 			break;
 
 			case 2: // horizontal flip
-				$dst_im = $this->flip(array('input' => $src_im, 'mode' => 'horizontal'));
+				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'horizontal']);
 			break;
 
 			case 3: // 180 rotate left
-				$dst_im = $this->rotate(array('input' => $src_im, 'degrees' => 180));
+				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 180]);
 			break;
 
 			case 4: // vertical flip
-				$dst_im = $this->flip(array('input' => $src_im, 'mode' => 'vertical'));
+				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'vertical']);
 			break;
 
 			case 5: // vertical flip + 90 rotate right
-				$dst_im = $this->flip(array('input' => $src_im, 'mode' => 'vertical'));
-				$dst_im = $this->rotate(array('input' => $src_im, 'degrees' => 90));
+				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'vertical']);
+				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 6: // 90 rotate right
-				$dst_im = $this->rotate(array('input' => $src_im, 'degrees' => 90));
+				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 7: // horizontal flip + 90 rotate right
-				$dst_im = $this->flip(array('input' => $src_im, 'mode' => 'horizontal'));
-				$dst_im = $this->rotate(array('input' => $src_im, 'degrees' => 90));
+				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'horizontal']);
+				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 8: // 90 rotate left
-				$dst_im = $this->rotate(array('input' => $src_im, 'degrees' => 270));
+				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 270]);
 			break;
 
 			default:
-				return $this->saveImage($src_im, $options);
+				return ImageTool::saveImage($src_im, $options);
     }
 
     if (!$dst_im) {
 			return false;
 		}
 
-		if (!$this->afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-    return $this->saveImage($dst_im, $options);
+    return ImageTool::saveImage($dst_im, $options);
 	}
 
 
@@ -842,8 +851,8 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function rotate($options = array()) {
-		$options = array_merge(array(
+	public static function rotate($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
@@ -851,9 +860,9 @@ class ImageToolComponent extends Component {
 			'output' => null,
 			'degrees' => 'horizontal',
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$src_im = $this->openImage($options['input']);
+		$src_im = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -878,7 +887,7 @@ class ImageToolComponent extends Component {
 
 			case 360:
 			case 0:
-				return $this->saveImage($src_im, $options);
+				return ImageTool::saveImage($src_im, $options);
 			break;
 
 			default:
@@ -914,11 +923,11 @@ class ImageToolComponent extends Component {
 			}
 		}
 
-		if (!$this->afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($dst_im, $options);
+		return ImageTool::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -936,8 +945,8 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function flip($options = array()) {
-		$options = array_merge(array(
+	public static function flip($options = []) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
@@ -945,9 +954,9 @@ class ImageToolComponent extends Component {
 			'output' => null,
 			'mode' => 'horizontal',
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$src_im = $this->openImage($options['input']);
+		$src_im = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -987,11 +996,11 @@ class ImageToolComponent extends Component {
 				return false;
 		}
 
-		if (!$this->afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($dst_im, $options);
+		return ImageTool::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -1004,13 +1013,13 @@ class ImageToolComponent extends Component {
 	 * @param array $options An array of options.
 	 * @returm mixed string|boolean
 	 */
-	function averageColor($options = array()) {
-		$options = array_merge(array(
+	public static function averageColor($options = []) {
+		$options = array_merge([
 			'input' => null,
 			'format' => 'int'
-		), $options);
+		], $options);
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1048,13 +1057,13 @@ class ImageToolComponent extends Component {
 	 * @param array $options An array of options.
 	 * @returm mixed string|boolean
 	 */
-	function dominatingColor($options = array()) {
-		$options = array_merge(array(
+	public static function dominatingColor($options = []) {
+		$options = array_merge([
 			'input' => null,
 			'format' => 'int'
-		), $options);
+		], $options);
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1067,7 +1076,7 @@ class ImageToolComponent extends Component {
 			return false;
 		}
 
-		$colors = array();
+		$colors = [];
 
 		for ($y=0; $y<50; $y++) {
 			for ($x=0; $x<50; $x++) {
@@ -1101,7 +1110,7 @@ class ImageToolComponent extends Component {
 	 * PNG ALPHA CHANNEL SUPPORT for imagecopymerge();
 	 * This is a f-ion like imagecopymerge but it handle alpha channel well!!!
 	 **/
-	function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct){
+	public static function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct){
 		// getting the watermark width
 		$w = imagesx($src_im);
 		// getting the watermark height
@@ -1132,8 +1141,8 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function pixelate($options) {
-		$options = array_merge(array(
+	public static function pixelate($options) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
@@ -1141,9 +1150,9 @@ class ImageToolComponent extends Component {
 			'output' => null,
 			'input' => null,
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1155,13 +1164,13 @@ class ImageToolComponent extends Component {
 
 		for($x=0; $x<$w; $x+=$options['blocksize']) {
 			for($y=0; $y<$h; $y+=$options['blocksize']) {
-				$colors = array(
+				$colors = [
 					'alpha' => 0,
 					'red' => 0,
 					'green' => 0,
 					'blue' => 0,
 					'total' => 0
-				);
+				];
 
 				for ($block_x = 0 ; $block_x < $options['blocksize'] ; $block_x++) {
 					for ($block_y = 0 ; $block_y < $options['blocksize'] ; $block_y++) {
@@ -1195,11 +1204,11 @@ class ImageToolComponent extends Component {
 			}
 		}
 
-		if (!$this->afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($img, $options);
+		return ImageTool::saveImage($img, $options);
 	}
 
 	/**
@@ -1218,8 +1227,8 @@ class ImageToolComponent extends Component {
 	 * @param mixed $options An array of options
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function meshify($options) {
-		$options = array_merge(array(
+	public static function meshify($options) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
@@ -1227,18 +1236,18 @@ class ImageToolComponent extends Component {
 			'output' => null,
 			'input' => null,
 			'chmod' => null,
-			'color' => array(0, 0, 0)
-		), $options);
+			'color' => [0, 0, 0]
+		], $options);
 
-		$src_im = $this->openImage($options['input']);
+		$src_im = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		$w = imagesx($src_im);
 		$h = imagesy($src_im);
 
-		$rgb = $this->readColor($options['color']);
+		$rgb = ImageTool::readColor($options['color']);
 		if (!$rgb) {
-			$rgb = array(0, 0, 0);
+			$rgb = [0, 0, 0];
 		}
 
 		$color = imagecolorallocate($src_im, $rgb[0], $rgb[1], $rgb[2]);
@@ -1249,11 +1258,11 @@ class ImageToolComponent extends Component {
 			}
 		}
 
-		if (!$this->afterCallbacks($src_im, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($src_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($src_im, $options);
+		return ImageTool::saveImage($src_im, $options);
 	}
 
 	/**
@@ -1269,17 +1278,17 @@ class ImageToolComponent extends Component {
 	 *
 	 * @return mixed boolean or GD resource if output was set to null
 	 */
-	function grayscale($options) {
-		$options = array_merge(array(
+	public static function grayscale($options) {
+		$options = array_merge([
 			'afterCallbacks' => null,
 			'compression' => null,
 			'quality' => null,
 			'output' => null,
 			'input' => null,
 			'chmod' => null
-		), $options);
+		], $options);
 
-		$img = $this->openImage($options['input']);
+		$img = ImageTool::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1289,7 +1298,7 @@ class ImageToolComponent extends Component {
 		$w = imagesx($img);
 		$h = imagesy($img);
 
-		$palette = array();
+		$palette = [];
 
 		for ($c=0; $c<256; $c++) {
 			$palette[$c] = imagecolorallocate($img, $c, $c, $c);
@@ -1303,23 +1312,23 @@ class ImageToolComponent extends Component {
 				$g = ($rgb >> 8) & 0xFF;
 				$b = $rgb & 0xFF;
 
-				$gs = $this->yiq($r, $g, $b);
+				$gs = ImageTool::yiq($r, $g, $b);
 
 				imagesetpixel($img, $x, $y, $palette[$gs]);
 			}
 		}
 
-		if (!$this->afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return $this->saveImage($img, $options);
+		return ImageTool::saveImage($img, $options);
 	}
 
 	/**
 	 * Helper function to covert color to grayscale
 	 */
-	function yiq($r, $g, $b) {
+	public static function yiq($r, $g, $b) {
 		return (($r*0.299)+($g*0.587)+($b*0.114));
 	}
 
@@ -1330,7 +1339,7 @@ class ImageToolComponent extends Component {
 	 * @param mixed $functions Callback functions and their arguments
 	 * @return boolean
 	 */
-	function afterCallbacks(&$im, $functions) {
+	public static function afterCallbacks(&$im, $functions) {
 		if (empty($functions)) {
 			return true;
 		}
@@ -1338,7 +1347,7 @@ class ImageToolComponent extends Component {
 		foreach ($functions as $v) {
 			$v[1]['input'] = $im;
 
-			$im = $this->$v[0]($v[1]);
+			$im = ImageTool::$v[0]($v[1]);
 
 			if (!$im) {
 				return false;
@@ -1356,15 +1365,15 @@ class ImageToolComponent extends Component {
 	 * @param mixed $color Input color
 	 * @return array Array of rgb values
 	 */
-	function readColor($color) {
+	public static function readColor($color) {
 		if (is_array($color)) {
 			if (count($color) == 3) {
 				return $color;
 			}
 		} else if (is_string($color)) {
-			return $this->hex2rgb($color);
+			return ImageTool::hex2rgb($color);
 		} else if (is_int($color)) {
-			return $this->hex2rgb(dechex($color));
+			return ImageTool::hex2rgb(dechex($color));
 		}
 
 		return false;
@@ -1376,20 +1385,20 @@ class ImageToolComponent extends Component {
 	 * @param string $color HEX color (3 or 6 chars)
 	 * @return mixed
 	 */
-	function hex2rgb($color) {
+	public static function hex2rgb($color) {
 		if ($color[0] == '#') {
 			$color = substr($color, 1);
 		}
 
 		if (strlen($color) == 6) {
-			list($r, $g, $b) = array($color[0].$color[1], $color[2].$color[3], $color[4].$color[5]);
+			list($r, $g, $b) = [$color[0].$color[1], $color[2].$color[3], $color[4].$color[5]];
 		} else if (strlen($color) == 3) {
-			list($r, $g, $b) = array($color[0].$color[0], $color[1].$color[1], $color[2].$color[2]);
+			list($r, $g, $b) = [$color[0].$color[0], $color[1].$color[1], $color[2].$color[2]];
 		} else {
 			return false;
 		}
 
-		return array(hexdec($r), hexdec($g), hexdec($b));
+		return [hexdec($r), hexdec($g), hexdec($b)];
 	}
 
 }

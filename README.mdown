@@ -4,26 +4,24 @@ CakePHP ImageTool Component
 About
 --------------------------------
 
-ImageTool component is php class to perform various tasks with images. Every function accepts
+ImageTool is php class to perform various tasks with images. Every function accepts
 GD resource as input and can output it as well (just leave 'output' option empty).
+
+Changes from 1.1.*
+--------------------------------
+
+This library now consists purely from static functions as there was no need for class object.
+This makes it very easy to use in cake's models or anywhere else and isn't cakephp specific.
 
 Installation
 --------------------------------
 
-For use with cakephp 2.0:
-
-* Copy ImageTool.php to your app's Controller/Component/ directory
-
-For use with cakephp 1.3:
-
-* Rename ImageTool.php to image_tool.php
-* Change "class ImageToolComponent extends Component" to "class ImageToolComponent extends Object"
-* Copy image_tool.php to your app's controllers/components/ directory
+For use with cakephp:
+* Copy ImageTool.php to your app's Vendor/ directory
+* Include in your controller: App::import('Vendor', 'ImageTool');
 
 For use as standalone library:
-
-* Change "class ImageToolComponent extends Component" to "class ImageTool"
-* Include in your project
+* Include in your project with include() or similar method
 
 Error handling
 --------------------------------
@@ -52,7 +50,7 @@ Examples
 
 Make thumbnail 100x100px in size
 
-	$status = $this->ImageTool->resize(array(
+	$status = ImageTool::resize(array(
 		'input' => $input_file,
 		'output' => $output_file,
 		'width' => 100,
@@ -62,7 +60,7 @@ Make thumbnail 100x100px in size
 Resize image (while keeping ratio) with max width and height both set to 600px. After that place watermark
 image in bottom-right corner and sharpen end result (with default settings)
 
-	$status = $this->ImageTool->resize(array(
+	$status = ImageTool::resize(array(
 		'input' => $input_file,
 		'output' => $output_file,
 		'width' => 600,
@@ -78,13 +76,13 @@ image in bottom-right corner and sharpen end result (with default settings)
 Autorotate image (getting back GD resource and then passing it to the next function (greyscale) - similar to previous
 example but without using afterCallbacks option)
 
-	$image = $this->ImageTool->autorotate(array(
+	$image = ImageTool::autorotate(array(
 		'input' => $input_file,
 		'output' => null
 	));
 
 	if ($image) {
-		$status = $this->ImageTool->grayscale(array(
+		$status = ImageTool::grayscale(array(
 			'input' => $image,
 			'output' => $output_file
 		));
