@@ -44,17 +44,17 @@ class ImageTool {
 		], $options);
 
 		// if output path (directories) doesn't exist, try to make whole path
-		if (!ImageTool::createPath($options['output'])) {
+		if (!self::createPath($options['output'])) {
 			return false;
 		}
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 		if (empty($img)) {
 			return false;
 		}
 
-		$src_wm = ImageTool::openImage($options['watermark']);
+		$src_wm = self::openImage($options['watermark']);
 		unset($options['watermark']);
 		if (empty($src_wm)) {
 			return false;
@@ -98,7 +98,7 @@ class ImageTool {
 				case 'top-left':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = self::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -106,7 +106,7 @@ class ImageTool {
 				case 'top-right':
 					for ($y=0; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
-							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = self::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -114,7 +114,7 @@ class ImageTool {
 				case 'bottom-right':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=$img_im_w; $x>-$img_wm_w; $x-=$img_wm_w) {
-							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = self::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -122,7 +122,7 @@ class ImageTool {
 				case 'bottom-left':
 					for ($y=$img_im_h; $y>-$img_wm_h; $y-=$img_wm_h) {
 						for ($x=0; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = self::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -134,7 +134,7 @@ class ImageTool {
 
 					for ($y=$pos_y; $y<$img_im_h; $y+=$img_wm_h) {
 						for ($x=$pos_x; $x<$img_im_w; $x+=$img_wm_w) {
-							$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+							$r = self::imagecopymerge_alpha($img, $src_wm, $x, $y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 						}
 					}
 				break;
@@ -174,18 +174,18 @@ class ImageTool {
 				}
 			}
 
-			$r = ImageTool::imagecopymerge_alpha($img, $src_wm, $pos_x, $pos_y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
+			$r = self::imagecopymerge_alpha($img, $src_wm, $pos_x, $pos_y, 0, 0, $img_wm_w, $img_wm_h, $options['opacity']);
 		}
 
 		if (!$r) {
 			return false;
 		}
 
-		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($img, $options);
+		return self::saveImage($img, $options);
 	}
 
 	/**
@@ -227,14 +227,14 @@ class ImageTool {
 		], $options);
 
 		// if output path (directories) doesn't exist, try to make whole path
-		if (!ImageTool::createPath($options['output'])) {
+		if (!self::createPath($options['output'])) {
 			return false;
 		}
 
-		$input_extension = ImageTool::getImageType($options['input']);
-		$output_extension = ImageTool::getExtension($options['output']);
+		$input_extension = self::getImageType($options['input']);
+		$output_extension = self::getExtension($options['output']);
 
-		$src_im = ImageTool::openImage($options['input']);
+		$src_im = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -352,7 +352,7 @@ class ImageTool {
 				if ($options['paddings'] === true) {
 					$rgb = [255, 255, 255];
 				} else {
-					$rgb = ImageTool::readColor($options['paddings']);
+					$rgb = self::readColor($options['paddings']);
 					if (!$rgb) {
 						$rgb = [255, 255, 255];
 					}
@@ -370,11 +370,11 @@ class ImageTool {
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($dst_im, $options);
+		return self::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -414,7 +414,7 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -443,7 +443,7 @@ class ImageTool {
 		$options['radius'] = abs(round($options['radius']));
 
 		if ($options['radius'] == 0) {
-			return ImageTool::saveImage($img, $options);
+			return self::saveImage($img, $options);
 		}
 
 		$w = imagesx($img);
@@ -533,11 +533,11 @@ class ImageTool {
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($img, $options);
+		return self::saveImage($img, $options);
 	}
 
 	/**
@@ -581,7 +581,7 @@ class ImageTool {
 				return imagecreatefromstring($image);
 			}
 
-			switch (ImageTool::getImageType($input)) {
+			switch (self::getImageType($input)) {
 				case 'jpg':
 					return imagecreatefromjpeg($input);
 				break;
@@ -609,7 +609,7 @@ class ImageTool {
 	 */
 	public static function getImageType($input, $extension = false) {
 		if ($extension) {
-			switch (ImageTool::getExtension($input)) {
+			switch (self::getExtension($input)) {
 				case 'jpg':
 					return 'jpg';
 				break;
@@ -674,7 +674,7 @@ class ImageTool {
 			'output' => null
 		], $options);
 
-		switch (ImageTool::getImageType($options['output'], true)) {
+		switch (self::getImageType($options['output'], true)) {
 			case 'jpg':
 				if (ImageJPEG($im, $options['output'], $options['quality'])) {
 					if (!empty($options['chmod'])) {
@@ -764,13 +764,13 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$type = ImageTool::getImageType($options['input']);
+		$type = self::getImageType($options['input']);
 
 		if ($type == 'jpg' && function_exists('exif_read_data')) {
 			$exif = exif_read_data($options['input']);
 		}
 
-		$src_im = ImageTool::openImage($options['input']);
+		$src_im = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -782,57 +782,57 @@ class ImageTool {
 		} else if (!empty($exif['IFD0']['Orientation'])) {
 			$orientation = $exif['IFD0']['Orientation'];
 		} else {
-			return ImageTool::saveImage($src_im, $options);
+			return self::saveImage($src_im, $options);
 		}
 
     switch ($orientation) {
 			case 1:
-				return ImageTool::saveImage($src_im, $options);
+				return self::saveImage($src_im, $options);
 			break;
 
 			case 2: // horizontal flip
-				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'horizontal']);
+				$dst_im = self::flip(['input' => $src_im, 'mode' => 'horizontal']);
 			break;
 
 			case 3: // 180 rotate left
-				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 180]);
+				$dst_im = self::rotate(['input' => $src_im, 'degrees' => 180]);
 			break;
 
 			case 4: // vertical flip
-				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'vertical']);
+				$dst_im = self::flip(['input' => $src_im, 'mode' => 'vertical']);
 			break;
 
 			case 5: // vertical flip + 90 rotate right
-				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'vertical']);
-				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
+				$dst_im = self::flip(['input' => $src_im, 'mode' => 'vertical']);
+				$dst_im = self::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 6: // 90 rotate right
-				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
+				$dst_im = self::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 7: // horizontal flip + 90 rotate right
-				$dst_im = ImageTool::flip(['input' => $src_im, 'mode' => 'horizontal']);
-				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 90]);
+				$dst_im = self::flip(['input' => $src_im, 'mode' => 'horizontal']);
+				$dst_im = self::rotate(['input' => $src_im, 'degrees' => 90]);
 			break;
 
 			case 8: // 90 rotate left
-				$dst_im = ImageTool::rotate(['input' => $src_im, 'degrees' => 270]);
+				$dst_im = self::rotate(['input' => $src_im, 'degrees' => 270]);
 			break;
 
 			default:
-				return ImageTool::saveImage($src_im, $options);
+				return self::saveImage($src_im, $options);
     }
 
     if (!$dst_im) {
 			return false;
 		}
 
-		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-    return ImageTool::saveImage($dst_im, $options);
+    return self::saveImage($dst_im, $options);
 	}
 
 
@@ -862,7 +862,7 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$src_im = ImageTool::openImage($options['input']);
+		$src_im = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -887,7 +887,7 @@ class ImageTool {
 
 			case 360:
 			case 0:
-				return ImageTool::saveImage($src_im, $options);
+				return self::saveImage($src_im, $options);
 			break;
 
 			default:
@@ -923,11 +923,11 @@ class ImageTool {
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($dst_im, $options);
+		return self::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -956,7 +956,7 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$src_im = ImageTool::openImage($options['input']);
+		$src_im = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$src_im) {
@@ -996,11 +996,11 @@ class ImageTool {
 				return false;
 		}
 
-		if (!ImageTool::afterCallbacks($dst_im, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($dst_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($dst_im, $options);
+		return self::saveImage($dst_im, $options);
 	}
 
 	/**
@@ -1019,7 +1019,7 @@ class ImageTool {
 			'format' => 'int'
 		], $options);
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1063,7 +1063,7 @@ class ImageTool {
 			'format' => 'int'
 		], $options);
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1152,7 +1152,7 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1204,11 +1204,11 @@ class ImageTool {
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($img, $options);
+		return self::saveImage($img, $options);
 	}
 
 	/**
@@ -1239,13 +1239,13 @@ class ImageTool {
 			'color' => [0, 0, 0]
 		], $options);
 
-		$src_im = ImageTool::openImage($options['input']);
+		$src_im = self::openImage($options['input']);
 		unset($options['input']);
 
 		$w = imagesx($src_im);
 		$h = imagesy($src_im);
 
-		$rgb = ImageTool::readColor($options['color']);
+		$rgb = self::readColor($options['color']);
 		if (!$rgb) {
 			$rgb = [0, 0, 0];
 		}
@@ -1258,11 +1258,11 @@ class ImageTool {
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($src_im, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($src_im, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($src_im, $options);
+		return self::saveImage($src_im, $options);
 	}
 
 	/**
@@ -1288,7 +1288,7 @@ class ImageTool {
 			'chmod' => null
 		], $options);
 
-		$img = ImageTool::openImage($options['input']);
+		$img = self::openImage($options['input']);
 		unset($options['input']);
 
 		if (!$img) {
@@ -1312,17 +1312,17 @@ class ImageTool {
 				$g = ($rgb >> 8) & 0xFF;
 				$b = $rgb & 0xFF;
 
-				$gs = ImageTool::yiq($r, $g, $b);
+				$gs = self::yiq($r, $g, $b);
 
 				imagesetpixel($img, $x, $y, $palette[$gs]);
 			}
 		}
 
-		if (!ImageTool::afterCallbacks($img, $options['afterCallbacks'])) {
+		if (!self::afterCallbacks($img, $options['afterCallbacks'])) {
 			return false;
 		}
 
-		return ImageTool::saveImage($img, $options);
+		return self::saveImage($img, $options);
 	}
 
 	/**
@@ -1347,7 +1347,7 @@ class ImageTool {
 		foreach ($functions as $v) {
 			$v[1]['input'] = $im;
 
-			$im = ImageTool::$v[0]($v[1]);
+			$im = self::$v[0]($v[1]);
 
 			if (!$im) {
 				return false;
@@ -1371,9 +1371,9 @@ class ImageTool {
 				return $color;
 			}
 		} else if (is_string($color)) {
-			return ImageTool::hex2rgb($color);
+			return self::hex2rgb($color);
 		} else if (is_int($color)) {
-			return ImageTool::hex2rgb(dechex($color));
+			return self::hex2rgb(dechex($color));
 		}
 
 		return false;
