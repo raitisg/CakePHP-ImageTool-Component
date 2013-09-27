@@ -611,6 +611,7 @@ class ImageTool {
 		if ($extension) {
 			switch (self::getExtension($input)) {
 				case 'jpg':
+				case 'jpeg':
 					return 'jpg';
 				break;
 
