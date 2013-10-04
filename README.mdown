@@ -29,6 +29,9 @@ Error handling
 Most image processing functions return either true or false (depending if action was successfull). Only exception is when
 you don't specify output (or set it to null/empty) - in such cases (if action was successfull) GD resource is returned.
 
+PHP requirements
+--------------------------------
+Minimum PHP version is 5.4 due to new array syntax used in library. If needed you can replace [] to array() in places arrays are used if you can't use 5.4 or higher version
 
 Available functions
 --------------------------------
