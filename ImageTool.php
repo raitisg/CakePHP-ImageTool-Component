@@ -1402,6 +1402,32 @@ class ImageTool {
 		return [hexdec($r), hexdec($g), hexdec($b)];
 	}
 
+	/**
+	 * Writes the given text with a border into the image using TrueType fonts.
+	 *
+	 * @author John Ciacia  (code taken from: http://www.johnciacia.com/2010/01/04/using-php-and-gd-to-add-border-to-text/)
+	 * @param mixed $image An image resource
+	 * @param int $size The font size
+	 * @param int $angle The angle in degrees to rotate the text
+	 * @param int $x Upper left corner of the text
+	 * @param int $y Lower left corner of the text
+	 * @param mixed $textcolor This is the color of the main text
+	 * @param mixed $strokecolor This is the color of the text border
+	 * @param string $fontfile The path to the TrueType font you wish to use
+	 * @param string $text The text string in UTF-8 encoding
+	 * @param int $px Number of pixels the text border will be
+	 * @return mixed GD resource
+	 */
+	public static function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
+		for ($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++) {
+			for ($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++) {
+				imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
+			}
+		}
+
+		return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
+	}
+
 }
 
 ?>
