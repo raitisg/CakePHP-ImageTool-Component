@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Image tool 1.3.0
+ * Image tool 1.3.1
  *
  * Different tools/functions to perform various tasks w/ images
  */
@@ -235,7 +235,6 @@ class ImageTool {
 		$output_extension = self::getExtension($options['output']);
 
 		$src_im = self::openImage($options['input']);
-		unset($options['input']);
 
 		if (!$src_im) {
 			return false;
@@ -311,6 +310,14 @@ class ImageTool {
 				$src_h = $ratio * $options['height'];
 				$src_y = round(($input_height - $src_h) / 2);
 			}
+		}
+
+		// if possible, just move file w/o modifying it
+		$is_local = is_string($options['input']) && !preg_match('/^https?:\/\//', $options['input']);
+		$is_same_type = $input_extension === $output_extension;
+		$is_same_size = $input_width === $options['width'] && $input_height === $options['height'];
+		if ($is_same_size && $is_same_type && $is_local && empty($options['afterCallbacks'])) {
+			return copy($options['input'], $options['output']);
 		}
 
 		$dst_im = imagecreatetruecolor($options['width'], $options['height']);
