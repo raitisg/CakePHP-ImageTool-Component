@@ -68,7 +68,7 @@ image in bottom-right corner and sharpen end result (with default settings)
 		'output' => $output_file,
 		'width' => 600,
 		'height' => 600,
-		'keepRatio' => true,
+		'mode' => 'fit',
 		'paddings' => false,
 		'afterCallbacks' => array(
 			array('watermark', array('watermark' => $watermark_file, 'position' => 'bottom-right')),
