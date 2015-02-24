@@ -214,7 +214,7 @@ class ImageTool {
 			'afterCallbacks' => null,
 			'compression' => null,
 			'keepRatio' => false,
-			'paddings' => true,
+			'paddings' => false,
 			'enlarge' => true,
 			'quality' => null,
 			'chmod' => null,
