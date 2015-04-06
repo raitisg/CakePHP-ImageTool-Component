@@ -314,7 +314,13 @@ class ImageTool {
 		$is_same_type = $input_extension === $output_extension;
 		$is_same_size = $input_width === $options['width'] && $input_height === $options['height'];
 		if ($is_same_size && $is_same_type && $is_local && empty($options['afterCallbacks'])) {
-			return copy($options['input'], $options['output']);
+			$r = copy($options['input'], $options['output']);
+
+			if (!empty($options['chmod'])) {
+				chmod($options['output'], $options['chmod']);
+			}
+
+			return $r;
 		}
 
 		$dst_im = imagecreatetruecolor($options['width'], $options['height']);
