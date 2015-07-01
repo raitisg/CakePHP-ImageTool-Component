@@ -1,11 +1,16 @@
 {
 	"name": "raitisg/imagetool",
 	"description": "Different tools/functions to perform various tasks with images",
+	"keywords": ["cakephp", "gd", "image", "images", "effects"],
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Raitis G",
 			"email": "raitisg@gmail.com"
 		}
 	],
+	"require": {
+		"php": ">=5.4.0"
+	},
 	"require": {}
 }
