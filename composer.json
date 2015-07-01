@@ -1,0 +1,11 @@
+{
+	"name": "raitisg/imagetool",
+	"description": "Different tools/functions to perform various tasks with images",
+	"authors": [
+		{
+			"name": "Raitis G",
+			"email": "raitisg@gmail.com"
+		}
+	],
+	"require": {}
+}
