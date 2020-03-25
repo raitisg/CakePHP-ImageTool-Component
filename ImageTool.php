@@ -603,6 +603,10 @@ class ImageTool {
 				case 'gif':
 					return imagecreatefromgif($input);
 				break;
+
+				case 'webp':
+					return imagecreatefromwebp($input);
+				break;
 			}
 		}
 
@@ -632,6 +636,10 @@ class ImageTool {
 				case 'gif':
 					return 'gif';
 				break;
+
+				case 'webp':
+					return 'webp';
+				break;
 			}
 		} else if (is_string($input) && is_file($input)) {
 			$info = getimagesize($input);
@@ -650,6 +658,10 @@ class ImageTool {
 
 				case 'image/gif':
 					return 'gif';
+				break;
+
+				case 'image/webp':
+					return 'webp';
 				break;
 			}
 		}
