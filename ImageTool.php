@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Image tool 1.4.1
+ * Image tool 1.4.2
  *
  * Different tools/functions to perform various tasks w/ images
  */
@@ -748,11 +748,11 @@ class ImageTool {
 			return true;
 		}
 
-		$arr_output_path = explode(DIRECTORY_SEPARATOR, $output_path);
+		$arr_output_path = explode($output_path, DIRECTORY_SEPARATOR);
 
 		unset($arr_output_path[count($arr_output_path)-1]);
 
-		$dir_path = implode($arr_output_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+		$dir_path = implode(DIRECTORY_SEPARATOR, $arr_output_path).DIRECTORY_SEPARATOR;
 
 		if (!file_exists($dir_path)) {
 			if (!mkdir($dir_path, $chmod, true)) {
