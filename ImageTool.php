@@ -748,7 +748,7 @@ class ImageTool {
 			return true;
 		}
 
-		$arr_output_path = explode($output_path, DIRECTORY_SEPARATOR);
+		$arr_output_path = explode(DIRECTORY_SEPARATOR, $output_path);
 
 		unset($arr_output_path[count($arr_output_path)-1]);
 
